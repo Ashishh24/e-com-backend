@@ -7,6 +7,7 @@ const {
 } = require("../utils/validation");
 const User = require("../models/user");
 const Pincode = require("../models/pincode");
+const transporter = require("../utils/emailService");
 
 const profileRouter = express.Router();
 
@@ -160,6 +161,32 @@ profileRouter.get("/pincode/:code", userAuth, async (req, res) => {
       throw { message: "No such pincode found", statusCode: 404 };
     }
     res.json(pincodeData);
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+});
+
+profileRouter.post("/contact", userAuth, async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  if (!name || !email || !message) {
+    throw { message: "Missing fields", statusCode: 404 };
+  }
+
+  try {
+    await transporter.sendMail({
+      from: `${name} <${email}>`,
+      to: process.env.EMAIL_USER,
+      subject: "Someone wants to send you message....",
+      text: `
+        Name: ${name}
+        Email: ${email}
+        Subject: ${subject}
+        Message:
+        ${message}
+      `,
+    });
+
+    res.json({ success: true, message: "Message sent successfully!" });
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

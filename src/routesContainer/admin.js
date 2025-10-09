@@ -119,22 +119,27 @@ adminRouter.get("/allOrders", userAuth, userAdmin, async (req, res) => {
   }
 });
 
-adminRouter.patch("/order/:id", userAuth, userAdmin, async (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const order = await Order.findById(orderId);
-    if (!order) {
-      throw { message: "Order not found!", statusCode: 404 };
+adminRouter.patch(
+  "/order/:id/:status",
+  userAuth,
+  userAdmin,
+  async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      const order = await Order.findById(orderId);
+      if (!order) {
+        throw { message: "Order not found!", statusCode: 404 };
+      }
+      const orderStatus = req.params.status;
+      order.orderStatus = orderStatus;
+
+      await order.save();
+
+      res.status(200).json({ message: "Order Status upadted successfully!!" });
+    } catch (err) {
+      res.status(err.statusCode || 500).json({ message: err.message });
     }
-    const { orderStatus } = req.body;
-    order.orderStatus = orderStatus;
-
-    await order.save();
-
-    res.status(200).json({ message: "Order Status upadted successfully!!" });
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
   }
-});
+);
 
 module.exports = adminRouter;
