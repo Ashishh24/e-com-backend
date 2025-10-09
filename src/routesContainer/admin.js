@@ -23,8 +23,13 @@ adminRouter.post("/products", userAuth, userAdmin, async (req, res) => {
       description,
       price,
       discountedPrice,
+      burnTime,
+      size,
+      ingredients,
+      fragrances,
       images,
-      stock,
+      inStock,
+      special,
     } = productData;
     const product = new Product({
       name,
@@ -32,8 +37,13 @@ adminRouter.post("/products", userAuth, userAdmin, async (req, res) => {
       description,
       price,
       discountedPrice,
+      burnTime,
+      size,
+      ingredients,
+      fragrances,
       images,
-      stock,
+      inStock,
+      special,
     });
 
     await product.save();
@@ -100,14 +110,10 @@ adminRouter.get("/allOrders", userAuth, userAdmin, async (req, res) => {
     const orders = await Order.find(filter)
       .skip((page - 1) * limit)
       .limit(Number(limit))
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .populate("userId");
 
-    res.status(200).json({
-      page: Number(page),
-      totalPages,
-      totalOrders,
-      orders,
-    });
+    res.status(200).json(orders);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

@@ -65,7 +65,7 @@ profileRouter.get("/me", userAuth, async (req, res) => {
     if (!user) {
       throw { message: "User not found", statusCode: 404 };
     }
-    res.json({ user: user });
+    res.json(user);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
@@ -159,7 +159,7 @@ profileRouter.get("/pincode/:code", userAuth, async (req, res) => {
     if (!pincodeData) {
       throw { message: "No such pincode found", statusCode: 404 };
     }
-    res.json({ pincodeData: pincodeData });
+    res.json(pincodeData);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

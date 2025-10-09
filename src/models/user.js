@@ -4,6 +4,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const addressSchema = new mongoose.Schema({
+  name: {
+      type: String,
+      required: true,
+      minLength: [2, "Name must be at least 2 characters long."],
+      maxLength: 50,
+      trim: true,
+    },
   street: {
     type: String,
     trim: true,

@@ -57,17 +57,33 @@ const ProductSchema = new mongoose.Schema(
       //   message: "Discounted price should not exceed original price",
       // },
     },
-    images: [
-      {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    ],
-    stock: {
-      type: Number,
+    burnTime: {
+      type: String,
+    },
+    size: {
+      type: String,
       required: true,
-      min: 0,
+    },
+    ingredients: {
+      type: [String],
+      required: true,
+    },
+    fragrances: {
+      type: [String],
+      required: true,
+    },
+    images: {
+      type: [String],
+      required: true,
+    },
+    inStock: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+    special: {
+      type: Boolean,
+      default: false,
     },
     avgRating: {
       type: Number,
@@ -76,7 +92,7 @@ const ProductSchema = new mongoose.Schema(
       default: 0,
     },
     reviews: [reviewSchema],
-  },
+  },  
   {
     timestamps: true,
   }

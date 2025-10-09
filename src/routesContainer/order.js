@@ -53,12 +53,7 @@ orderRouter.get("/orders", userAuth, async (req, res) => {
       .limit(Number(limit))
       .sort({ createdAt: -1 });
 
-    res.status(200).json({
-      page: Number(page),
-      totalPages,
-      totalOrders,
-      orders,
-    });
+    res.status(200).json(orders);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
@@ -71,7 +66,7 @@ orderRouter.get("/orders/:id", userAuth, async (req, res) => {
     if (!orderData) {
       throw { message: "Invalid order ID! No Order found", statusCode: 404 };
     }
-    res.status(200).json({ order: orderData });
+    res.status(200).json(orderData);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

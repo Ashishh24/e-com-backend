@@ -49,7 +49,7 @@ listRouter.get("/wishlist", userAuth, async (req, res) => {
         .status(200)
         .json({ message: "No products added to wishlist! Start Shopping!!" });
     }
-    res.status(200).json({ wishlist: user.wishlist });
+    res.status(200).json(user.wishlist);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
@@ -68,7 +68,7 @@ listRouter.post("/cart/:itemId", userAuth, async (req, res) => {
     const index = user.cart.items.findIndex(
       (cartItem) => cartItem.product.toString() === itemId
     );
-    
+
     if (index === -1) {
       user.cart.items.push({
         product: itemId,
@@ -99,7 +99,7 @@ listRouter.post("/cart/:itemId", userAuth, async (req, res) => {
   }
 });
 
-listRouter.delete("/cart/:itemId", userAuth, async (req, res) => {
+listRouter.patch("/cart/:itemId", userAuth, async (req, res) => {
   try {
     const user = req.user;
     const { itemId } = req.params;
@@ -140,6 +140,39 @@ listRouter.delete("/cart/:itemId", userAuth, async (req, res) => {
   }
 });
 
+listRouter.delete("/cart/:itemId", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    const { itemId } = req.params;
+
+    const product = await Product.findById(itemId);
+    if (!product) {
+      throw { message: "Product not found", statusCode: 404 };
+    }
+    const index = user.cart.items.findIndex(
+      (cartItem) => cartItem.product.toString() === itemId
+    );
+    if (index === -1) {
+      throw { message: "Item not found in cart", statusCode: 404 };
+    }
+
+    user.cart.items.splice(index, 1);
+    message = "Product removed from cart";
+
+    user.cart.cartTotal = user.cart.items.reduce(
+      (sum, item) => sum + item.itemsTotal,
+      0
+    );
+
+    await user.save();
+    await user.populate("cart.items.product");
+
+    res.status(200).json({ message, cart: user.cart });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+});
+
 listRouter.get("/cart", userAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate(
@@ -162,7 +195,7 @@ listRouter.get("/cart", userAuth, async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ cart: user.cart });
+    res.status(200).json(user.cart);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

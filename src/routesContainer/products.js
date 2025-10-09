@@ -7,30 +7,18 @@ const productRouter = express.Router();
 
 productRouter.get("/products", async (req, res) => {
   try {
-    const { page = 1, limit = 5, category } = req.query;
-    const filter = {};
-    if (category) {
-      filter.category = category;
-    }
+    const products = await Product.find();
 
-    const totalProducts = await Product.countDocuments(filter);
-    const totalPages = Math.ceil(totalProducts / limit);
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
-    if (page > totalPages) {
-      return res.status(404).send("Invalid Request! No Products found");
-    }
-
-    const products = await Product.find(filter)
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .sort({ createdAt: -1 });
-
-    res.status(200).json({
-      page: Number(page),
-      totalPages,
-      totalProducts,
-      products,
-    });
+productRouter.get("/specialProducts", async (req, res) => {
+  try {
+    const products = await Product.find({ special: true });
+    res.status(200).json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -46,7 +34,7 @@ productRouter.get("/products/:id", async (req, res) => {
         statusCode: 404,
       };
     }
-    res.status(200).json({ product: productData });
+    res.status(200).json(productData);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
@@ -60,7 +48,7 @@ productRouter.get("/products/:id/reviews", async (req, res) => {
       throw { message: "No product found!", statusCode: 404 };
     }
 
-    res.status(200).json({ reviews: product.reviews });
+    res.status(200).json(product.reviews);
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
