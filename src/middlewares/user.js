@@ -21,7 +21,7 @@ const userAuth = async (req, res, next) => {
 };
 
 const userAdmin = async (req, res, next) => {
-  if (req.user.email !== process.env.IS_ADMIN) {
+  if (!req.user.isAdmin) {
     throw { message: "Access denied. Admins only.", statusCode: 403 };
   }
   next();

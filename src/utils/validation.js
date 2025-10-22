@@ -101,14 +101,13 @@ const validateAddress = (address) => {
 
 const validateProductData = (productData) => {
   const errors = [];
-  const { name, category, price, discountedPrice, images, stock } = productData;
+  const { name, category, price, discountedPrice, images } = productData;
 
   if (!name || name.trim().length < 2) {
     errors.push("Product name must be at least 2 characters");
   }
 
-  const allowedCategories = ["jar", "pillar", "bouquet", "decor", "other"];
-  if (!category || !allowedCategories.includes(category.toLowerCase())) {
+  if (!category) {
     errors.push("Invalid category");
   }
 
@@ -124,28 +123,24 @@ const validateProductData = (productData) => {
     errors.push("At least one product photo is required");
   }
 
-  if (stock < 0) {
-    errors.push("Stock cannot be negative");
-  }
-
   return errors;
 };
 
 const validateProductEditData = (productData) => {
   const errors = [];
-  console.log(productData);
 
-  const { name, category, price, discountedPrice, images, stock } = productData;
+  const { name, category, price, discountedPrice, images } = productData;
 
   if (name !== undefined && name.trim().length < 2) {
     errors.push("Product name must be at least 2 characters");
   }
 
-  const allowedCategories = ["jar", "pillar", "bouquet", "decor", "other"];
-  if (
-    category !== undefined &&
-    !allowedCategories.includes(category.toLowerCase())
-  ) {
+  // const allowedCategories = ["jar", "pillar", "bouquet", "decor", "other"];
+  // if (
+  //   category !== undefined &&
+  //   !allowedCategories.includes(category.toLowerCase())
+  // ) 
+  if(!category){
     errors.push("Invalid category");
   }
 
@@ -166,16 +161,11 @@ const validateProductEditData = (productData) => {
     errors.push("At least one product photo is required");
   }
 
-  if (stock !== undefined && stock < 0) {
-    errors.push("Stock cannot be negative");
-  }
-
   return errors;
 };
 
 const validateOrderData = (orderData) => {
   const errors = [];
-  console.log(orderData);
   const { items, shippingAddress, payment } = orderData;
 
   let total = 0;

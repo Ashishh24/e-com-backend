@@ -5,12 +5,12 @@ const jwt = require("jsonwebtoken");
 
 const addressSchema = new mongoose.Schema({
   name: {
-      type: String,
-      required: true,
-      minLength: [2, "Name must be at least 2 characters long."],
-      maxLength: 50,
-      trim: true,
-    },
+    type: String,
+    required: true,
+    minLength: [2, "Name must be at least 2 characters long."],
+    maxLength: 50,
+    trim: true,
+  },
   street: {
     type: String,
     trim: true,
@@ -120,6 +120,10 @@ const userSchema = new mongoose.Schema(
         },
       ],
     },
+    isAdmin: {
+      type: Boolean,
+      deafult: false,
+    },
   },
   {
     timestamps: true,
@@ -140,7 +144,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.getJWT = function () {
   const user = this;
   const jwtToken = jwt.sign({ _id: user._id }, process.env.JWT_KEY, {
-    expiresIn: "1d",
+    expiresIn: "30d",
   });
   return jwtToken;
 };

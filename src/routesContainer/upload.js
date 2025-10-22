@@ -30,15 +30,11 @@ uploadRouter.post("/upload/product", upload.single("image"), (req, res) => {
   s3.upload(params, (err, data) => {
     fs.unlinkSync(req.file.path);
 
-    let type = "file";
-    if (req.file.mimetype.startsWith("image")) type = "image";
-    if (req.file.mimetype.startsWith("video")) type = "video";
-
     if (err) {
       return res.status(500).json({ error: err.message });
     }
 
-    res.json({ url: data.Location, type });
+    res.json({ url: data.Location });
   });
 });
 

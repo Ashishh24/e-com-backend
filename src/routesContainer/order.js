@@ -8,7 +8,7 @@ const orderRouter = express.Router();
 orderRouter.post("/order", userAuth, async (req, res) => {
   try {
     const user = req.user;
-    const { orderData } = req.body;
+    const orderData = req.body;
     const errors = validateOrderData(orderData);
     if (errors.length > 0) {
       throw { message: errors, statusCode: 406 };
