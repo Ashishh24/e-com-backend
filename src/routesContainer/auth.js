@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../models/user");
 const { validateSignupData } = require("../utils/validation");
-const { sendOTPForEmailVerification } = require("../utils/otpService");
+const { sendOTPForEmailVerification, verifyOTP } = require("../utils/otpService");
 
 const authRouter = express.Router();
 

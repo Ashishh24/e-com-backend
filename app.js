@@ -36,4 +36,5 @@ connectDB()
   .catch((err) => {
     console.log(err.errmsg);
     console.log("DB not connected :(");
-  });
+  }
+);
