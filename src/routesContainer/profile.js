@@ -123,7 +123,7 @@ profileRouter.patch("/address/:id", userAuth, async (req, res) => {
 
     await user.save();
 
-    res.json({ message: "Address updated successfully", address });
+    res.json({ message: "Address updated successfully", addresses: user.address });
   } catch (err) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }

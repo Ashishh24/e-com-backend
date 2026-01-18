@@ -55,7 +55,7 @@ listRouter.get("/wishlist", userAuth, async (req, res) => {
   }
 });
 
-// /**********ORDER************/
+// /**********CART************/
 listRouter.post("/cart/:itemId", userAuth, async (req, res) => {
   try {
     const user = req.user;
@@ -186,7 +186,11 @@ listRouter.get("/cart", userAuth, async (req, res) => {
     }
 
     user.cart.items.forEach(
-      (item) => (item.itemsTotal = item.product.discountedPrice * item.quantity)
+      (item) =>
+        (item.itemsTotal =
+          (item.product.discountedPrice
+            ? item.product.discountedPrice
+            : item.product.price) * item.quantity)
     );
     user.cart.cartTotal = user.cart.items.reduce(
       (sum, item) => sum + item.itemsTotal,

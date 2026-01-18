@@ -11,11 +11,6 @@ const pincodeSchema = new mongoose.Schema({
       message: "Invalid Indian pincode",
     },
   },
-  delivery: {
-    type: String,
-    required: true,
-    enum: ["Delivery", "Non Delivery"],
-  },
   city: {
     type: String,
     required: true,
